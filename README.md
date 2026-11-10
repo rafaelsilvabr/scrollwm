@@ -15,7 +15,7 @@
   <a href="LICENSE">MIT license</a>
 </p>
 
-# ScrollWM
+# <img src="docs/assets/scrollwm-icon.svg" alt="" width="32" height="32" /> ScrollWM
 
 ScrollWM is an experimental, open source scrolling window manager for **Windows 11 x64**, built with C# and WPF on .NET 10. Opening another app extends a horizontal strip instead of shrinking the windows you already use. Move your focus along the strip and the next window comes into view.
 

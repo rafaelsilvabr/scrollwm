@@ -4,6 +4,7 @@ These original, editable SVGs are distributed under the repository's [MIT licens
 
 | File | Purpose | Canvas |
 | --- | --- | --- |
+| `scrollwm-icon.svg` | Compact project symbol beside the README heading | 64 × 64 |
 | `scrollwm-banner.svg` | Project identity and horizontal-workspace concept | 1440 × 560 |
 | `scrollwm-strip.svg` | Focus navigation with unchanged window widths | 1440 × 700 |
 | `scrollwm-architecture.svg` | App composition and core/native boundaries | 1440 × 600 |
