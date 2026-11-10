@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.0.1 — 2026-11-09
+
+- Publish the first developer preview as a self-contained Windows x64 executable and portable ZIP, with SHA-256 checksums and a repeatable tag-triggered release workflow.
+- Include independent scrolling strips per monitor, width presets, keyboard focus/reordering, monitor transfers, opt-in enrollment, and journaled placement/shape restoration.
+- Mixed DPI, hardware display transitions, broad application compatibility, and complete native gesture verification remain open. This release does not establish everyday MVP readiness.
+
 - Prepare the source repository for open source publication with a clearer README, three editable SVG illustrations, updated contribution guidance, dependency update configuration, and a GitHub publication guide.
 
 - Keep partial edge windows visible inside their monitor at their existing widths, beneath fully visible managed windows. Focus or click an exposed edge to reveal it. Park only entirely off-viewport columns.

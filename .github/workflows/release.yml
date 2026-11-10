@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build, test, and package Windows x64
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $version = $env:RELEASE_TAG -replace '^v', ''
+          ./scripts/build-release.ps1 -Version $version
+      - name: Retain test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-test-results
+          path: artifacts/releases/*/test-results/*.trx
+          if-no-files-found: ignore
+      - name: Publish developer preview
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $version = $env:RELEASE_TAG -replace '^v', ''
+          $assets = Get-ChildItem "artifacts/releases/$env:RELEASE_TAG/assets" -File
+          gh release create $env:RELEASE_TAG @($assets.FullName) --verify-tag --title "ScrollWM $version - Developer preview" --notes-file "docs/releases/$env:RELEASE_TAG.md" --prerelease
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed.' }

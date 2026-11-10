@@ -43,4 +43,15 @@ Alternatively, create an empty repository in GitHub without an initial README or
 
 ## Before a binary release
 
-Complete the [manual test plan](manual-test-plan.md) and outstanding [multi-monitor compatibility checks](multi-monitor-plan.md). Keep release notes explicit about tested configurations and remaining limits. Package only the intended app output with the license, changelog, usage instructions, and runtime requirements; inspect the archive for private files. Signing, installation, automatic updates, and binary release automation are outside the current source-publication setup.
+Complete the [manual test plan](manual-test-plan.md) and outstanding [multi-monitor compatibility checks](multi-monitor-plan.md) before claiming everyday MVP readiness. Developer previews must explicitly document incomplete checks. Keep release notes clear about tested configurations and remaining limits. Signing, installation, and automatic updates are outside the current setup.
+
+The tag-triggered **Release** workflow builds and tests the solution, publishes a self-contained single-file Windows x64 executable, packages license/changelog/usage notes in a portable ZIP, computes SHA-256 checksums, and creates a GitHub prerelease. It never arranges desktop windows. Release notes must exist at `docs/releases/vVERSION.md`, and the tag must match `Version` in `Directory.Build.props` and the app manifest.
+
+For local packaging on Windows with the .NET 10 SDK:
+
+```powershell
+./scripts/build-release.ps1 -Version 0.0.1
+# Or add -DotNetPath ./.tools/dotnet/dotnet.exe for a project-local SDK.
+```
+
+Outputs are under ignored `artifacts/releases/v0.0.1/assets/`. The script requires a fresh output directory and stops on build, test, packaging, or version errors. Inspect the ZIP and smoke-test the executable before pushing the release tag. After committing the release changes and pushing `main`, push `v0.0.1` to trigger publication. Never move a published tag to a different commit; release a new version instead.

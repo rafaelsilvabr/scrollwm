@@ -19,7 +19,9 @@
 
 ScrollWM is an experimental, open source scrolling window manager for **Windows 11 x64**, built with C# and WPF on .NET 10. Opening another app extends a horizontal strip instead of shrinking the windows you already use. Move your focus along the strip and the next window comes into view.
 
-**Status: developer preview.** Multi-monitor strips are implemented; the everyday MVP is still in development. ScrollWM is a working name. There is no packaged release yet; build from source using the steps below.
+**Status: developer preview.** Multi-monitor strips are implemented; the everyday MVP is still in development. ScrollWM is a working name.
+
+**[Download v0.0.1 for Windows x64](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.1)** — a self-contained `.exe` and a portable ZIP with the license and usage notes. No .NET installation is needed to run the packaged app. The executable is unsigned.
 
 ## A workspace that moves with you
 
@@ -37,6 +39,10 @@ ScrollWM is an experimental, open source scrolling window manager for **Windows 
 See the [illustrated control-panel preview](docs/assets/scrollwm-ui.svg) and the [full usage guide](docs/strip-preview.md) for the UI and window lifecycle behavior.
 
 ## Try the preview
+
+For the packaged app, download `ScrollWM-0.0.1-win-x64.zip` from the [release page](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.1), extract it, and run `ScrollWM.exe`. The standalone `ScrollWM-0.0.1-win-x64.exe` runs the same app. See the [release notes](docs/releases/v0.0.1.md) for checksums, first-run instructions, and limitations.
+
+### Build from source
 
 You need **Windows 11 x64** and the **[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** to build. `global.json` accepts stable .NET 10 SDK feature bands starting at 10.0.100. A runtime alone cannot build the app.
 
