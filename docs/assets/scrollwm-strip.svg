@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="700" viewBox="0 0 1440 700" role="img" aria-labelledby="title description">
+  <title id="title">Scroll the workspace, keep the widths</title>
+  <desc id="description">Two concept views of a strip. First the Browser is focused with the Editor exposed underneath at the right edge. Next the Editor is revealed and Notes is visible beside it. Browser and Editor remain 340 units wide; Notes remains 200. A sequence below each view marks focus. Each monitor has its own independent strip.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Segoe UI', Arial, sans-serif; fill: #eaf1ff; }
+      .muted { fill: #a6b9d2; }
+      .caption { font-size: 17px; }
+      .code { stroke: #4b709d; stroke-width: 6; stroke-linecap: round; }
+    </style>
+    <pattern id="paper" width="28" height="22" patternUnits="userSpaceOnUse"><path d="M0 21H28" stroke="#2b405a"/></pattern>
+  </defs>
+  <rect width="1440" height="700" rx="24" fill="#0d1728"/>
+  <text x="56" y="64" font-size="13" letter-spacing="2.3" fill="#86dfc3">THE SCROLLING STRIP</text>
+  <text x="56" y="118" font-size="40" font-weight="650" letter-spacing="-1">Scroll the workspace. Keep the widths.</text>
+  <text x="56" y="154" font-size="19" class="muted">Focus brings the next window into view without squeezing your other apps.</text>
+  <!-- View 1: the edge Editor keeps its full size behind Browser. -->
+  <rect x="48" y="193" width="656" height="363" rx="16" fill="#111f33" stroke="#2b3e57"/>
+  <circle cx="82" cy="229" r="14" fill="#253e60"/>
+  <text x="82" y="234" text-anchor="middle" font-size="14">1</text>
+  <text x="108" y="235" font-size="18" font-weight="600">Focus: Browser</text>
+  <text x="675" y="233" text-anchor="end" font-size="12" class="muted">MONITOR VIEW</text>
+  <rect x="72" y="254" width="608" height="224" rx="10" fill="#091322" stroke="#30455f"/>
+  <rect x="320" y="270" width="340" height="192" rx="7" fill="#192c46" stroke="#45617f"/>
+  <path d="M321 304H659" stroke="#45617f"/>
+  <text x="468" y="292" font-size="14" class="muted">Editor</text>
+  <path d="M468 330h162m-162 20h107m-107 20h143m-143 20h127" class="code"/>
+  <text x="638" y="441" text-anchor="end" font-size="13" class="muted">340 wide</text>
+  <rect x="108" y="270" width="340" height="192" rx="7" fill="#18355a" stroke="#83b5ff" stroke-width="2"/>
+  <path d="M109 304H447" stroke="#4976a8"/>
+  <circle cx="126" cy="288" r="4" fill="#86dfc3"/>
+  <text x="140" y="293" font-size="14">Browser</text>
+  <rect x="127" y="322" width="302" height="59" rx="4" fill="#2a4c75"/>
+  <path d="M130 401h220m-220 16h155" class="code"/>
+  <text x="427" y="441" text-anchor="end" font-size="13" fill="#bdd8ff">340 wide</text>
+  <rect x="72" y="498" width="169" height="32" rx="6" fill="#254775" stroke="#6ea9ff"/>
+  <text x="156" y="519" text-anchor="middle" font-size="13">Browser · focused</text>
+  <text x="275" y="519" font-size="13" class="muted">Editor</text>
+  <text x="375" y="519" font-size="13" class="muted">Notes</text>
+  <text x="675" y="519" text-anchor="end" font-size="12" class="muted">STRIP ORDER</text>
+  <!-- View 2: the Editor is revealed, with unchanged width. -->
+  <rect x="736" y="193" width="656" height="363" rx="16" fill="#111f33" stroke="#2b3e57"/>
+  <circle cx="770" cy="229" r="14" fill="#253e60"/>
+  <text x="770" y="234" text-anchor="middle" font-size="14">2</text>
+  <text x="796" y="235" font-size="18" font-weight="600">Focus: Editor</text>
+  <rect x="1175" y="214" width="192" height="28" rx="6" fill="#20344e"/>
+  <text x="1271" y="233" text-anchor="middle" font-size="13" fill="#bfdaff">Ctrl + Alt + Right</text>
+  <rect x="760" y="254" width="608" height="224" rx="10" fill="#091322" stroke="#30455f"/>
+  <rect x="788" y="270" width="340" height="192" rx="7" fill="#18355a" stroke="#83b5ff" stroke-width="2"/>
+  <path d="M789 304H1127" stroke="#4976a8"/>
+  <circle cx="806" cy="288" r="4" fill="#86dfc3"/>
+  <text x="820" y="293" font-size="14">Editor</text>
+  <path d="m811 325 11 9-11 9m23 0h19" fill="none" stroke="#86dfc3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M812 367h240m-240 20h158m-158 20h212" class="code"/>
+  <text x="1107" y="441" text-anchor="end" font-size="13" fill="#bdd8ff">340 wide</text>
+  <rect x="1144" y="270" width="200" height="192" rx="7" fill="#192c46" stroke="#45617f"/>
+  <path d="M1145 304H1343" stroke="#45617f"/>
+  <text x="1163" y="293" font-size="14" class="muted">Notes</text>
+  <rect x="1162" y="318" width="164" height="97" fill="url(#paper)"/>
+  <text x="1323" y="441" text-anchor="end" font-size="13" class="muted">200 wide</text>
+  <text x="777" y="519" font-size="13" class="muted">Browser</text>
+  <rect x="869" y="498" width="169" height="32" rx="6" fill="#254775" stroke="#6ea9ff"/>
+  <text x="953" y="519" text-anchor="middle" font-size="13">Editor · focused</text>
+  <text x="1072" y="519" font-size="13" class="muted">Notes</text>
+  <text x="1363" y="519" text-anchor="end" font-size="12" class="muted">STRIP ORDER</text>
+  <path d="M56 591H1384" stroke="#293d57"/>
+  <rect x="56" y="620" width="35" height="24" rx="3" fill="none" stroke="#86dfc3" stroke-width="2"/>
+  <path d="M65 650h17m-8-6v6" stroke="#86dfc3" stroke-width="2" stroke-linecap="round"/>
+  <text x="110" y="641" font-size="18">One independent strip per monitor.</text>
+  <text x="1384" y="641" text-anchor="end" font-size="16" class="muted">Illustrative layout · not a screenshot</text>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="950" height="780" viewBox="0 0 950 780" role="img" aria-labelledby="title description">
+  <title id="title">ScrollWM compact interface</title>
+  <desc id="description">Illustrative SVG of the implemented two-pane interface in its running state. Window names are examples.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Segoe UI', sans-serif; font-size: 13px; fill: #1e293b; }
+      .muted { fill: #64748b; font-size: 12px; }
+      .heading { font-size: 14px; font-weight: 600; }
+      .name { font-weight: 600; }
+      .button { fill: #fff; stroke: #cbd5e1; }
+      .disabled { fill: #f1f5f9; stroke: #e2e8f0; }
+      .disabled-text { fill: #94a3b8; }
+      .selected { fill: #eff6ff; stroke: #bfdbfe; }
+      .icon { fill: none; stroke: #334155; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <rect x=".5" y=".5" width="949" height="779" rx="8" fill="#f5f6f8" stroke="#cbd5e1"/>
+  <text x="16" y="22" font-size="12">ScrollWM — Experimental Preview</text>
+  <path d="M827 15h10 M872 10h10v10h-10z M917 10l10 10m0-10-10 10" class="icon"/>
+  <rect x="13" y="44" width="114" height="34" fill="#fff" stroke="#d5dde7"/>
+  <rect x="127" y="44" width="114" height="34" fill="#f1f5f9" stroke="#d5dde7"/>
+  <text x="26" y="65">Scrolling strip</text><text x="140" y="65">Position probes</text>
+  <path d="M13 78h924v689H13z" fill="#fff" stroke="#d5dde7"/>
+  <path d="M34 104h5v20h-5z M42 104h5v20h-5z M50 104h5v20h-5z" fill="#1d4ed8"/>
+  <text x="67" y="123" style="font-size:22px;font-weight:600">ScrollWM</text>
+  <rect x="182" y="103" width="66" height="24" rx="12" fill="#dcfce7"/>
+  <text x="193" y="119" style="fill:#166534;font-size:12px;font-weight:600">Running</text>
+  <rect x="787" y="99" width="127" height="32" rx="4" class="button"/>
+  <text x="800" y="120">Pause &amp; restore</text>
+  <rect x="34" y="146" width="880" height="34" rx="4" fill="#f1f5f9"/>
+  <text x="44" y="168">Add open windows to extend the strip.</text>
+  <rect x="34" y="193" width="13" height="13" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="54" y="204" class="muted">Add new windows automatically</text>
+  <text x="34" y="239" class="heading">Available windows · 1</text>
+  <text x="34" y="259" class="muted">1 selected · Ctrl+click to change</text>
+  <rect x="386" y="225" width="80" height="32" rx="4" class="button"/>
+  <path d="M402 235a5 5 0 1 0 2 7m0-9v5h-5" class="icon"/>
+  <text x="412" y="246">Refresh</text>
+  <text x="482" y="239" class="heading">Strip · 3</text>
+  <text x="482" y="259" class="muted">Focused: Browser 1</text>
+  <rect x="34" y="273" width="432" height="370" fill="#fff" stroke="#d5dde7"/>
+  <rect x="482" y="273" width="432" height="370" fill="#fff" stroke="#d5dde7"/>
+  <rect x="40" y="279" width="420" height="39" rx="4" class="selected"/>
+  <text x="51" y="304" class="name">Browser 2</text>
+  <rect x="488" y="279" width="420" height="39" rx="4" class="selected"/>
+  <path d="M499 292l8 6-8 6z" fill="#1d4ed8"/>
+  <text x="518" y="304" class="name">Browser 1</text><text x="894" y="304" class="muted" text-anchor="end">954 px · Half</text>
+  <text x="518" y="347" class="name">Editor 1</text><text x="894" y="347" class="muted" text-anchor="end">1272 px · Two thirds</text>
+  <text x="518" y="390" class="name">Notepad 1</text><text x="894" y="390" class="muted" text-anchor="end">636 px · Third</text>
+  <rect x="34" y="655" width="101" height="32" rx="4" class="button"/><text x="45" y="676">Add selected</text>
+  <rect x="141" y="655" width="128" height="32" rx="4" class="button"/><text x="152" y="676">Add open windows</text>
+  <rect x="482" y="655" width="75" height="32" rx="4" class="disabled"/><text x="493" y="676" class="disabled-text">Previous</text>
+  <rect x="563" y="655" width="51" height="32" rx="4" class="button"/><text x="574" y="676">Next</text>
+  <rect x="620" y="655" width="36" height="32" rx="4" class="disabled"/>
+  <path d="m639 665-6 6 6 6m-6-6h12" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="662" y="655" width="36" height="32" rx="4" class="button"/>
+  <path d="m677 665 6 6-6 6m6-6h-12" class="icon"/>
+  <rect x="704" y="655" width="59" height="32" rx="4" class="button"/><text x="715" y="676">Width</text>
+  <circle cx="43" cy="716" r="8" fill="none" stroke="#64748b"/>
+  <path d="m40 714 3 3 3-3" fill="none" stroke="#64748b"/>
+  <text x="58" y="720" class="muted">Shortcuts &amp; window behavior</text>
+  <text x="34" y="747" class="muted">Emergency restore · Ctrl+Alt+Shift+Esc</text>
+</svg>

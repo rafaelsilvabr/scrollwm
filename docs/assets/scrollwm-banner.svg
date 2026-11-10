@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" role="img" aria-labelledby="title description">
+  <title id="title">ScrollWM — Keep your windows wide. Move your focus.</title>
+  <desc id="description">A navy banner for the experimental Windows scrolling window manager, with a horizontal strip of illustrated application windows and a blue focused column.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#101e36"/><stop offset="1" stop-color="#090f1c"/></linearGradient>
+    <linearGradient id="focus" x2="0" y2="1"><stop stop-color="#1b3b68"/><stop offset="1" stop-color="#14273f"/></linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#b2c9e8" stroke-opacity=".045"/></pattern>
+    <style>
+      text { font-family: 'Segoe UI', Arial, sans-serif; }
+      .muted { fill: #aabbd1; }
+      .small { font-size: 16px; }
+      .line { stroke: #334761; stroke-width: 6; stroke-linecap: round; }
+    </style>
+  </defs>
+  <rect width="1440" height="560" rx="24" fill="url(#background)"/>
+  <rect width="1440" height="560" rx="24" fill="url(#grid)"/>
+  <path d="M72 68h9v30h-9zm16 0h9v30h-9zm16 0h9v30h-9z" fill="#7baeff"/>
+  <text x="130" y="91" font-size="22" font-weight="600" fill="#e9f1ff">ScrollWM</text>
+  <rect x="253" y="67" width="178" height="31" rx="15.5" fill="#1b2c41" stroke="#334761"/>
+  <circle cx="271" cy="82.5" r="4" fill="#86dfc3"/>
+  <text x="284" y="88" font-size="13" letter-spacing="1" fill="#c5d5e9">DEVELOPER PREVIEW</text>
+  <text x="68" y="199" font-size="78" font-weight="700" letter-spacing="-3" fill="#f1f6ff">Keep your</text>
+  <text x="68" y="284" font-size="78" font-weight="700" letter-spacing="-3" fill="#f1f6ff">windows wide.</text>
+  <text x="72" y="341" font-size="36" font-weight="400" fill="#8eb9ff">Move your focus.</text>
+  <text x="72" y="391" font-size="20" class="muted">A scrolling window manager for Windows.</text>
+  <path d="M72 442H651" stroke="#27374e"/>
+  <text x="72" y="480" class="small muted">Windows 11</text>
+  <circle cx="191" cy="475" r="2" fill="#526982"/>
+  <text x="209" y="480" class="small muted">C# / .NET 10</text>
+  <circle cx="337" cy="475" r="2" fill="#526982"/>
+  <text x="355" y="480" class="small muted">Open source / MIT</text>
+  <!-- Concept illustration: windows form one horizontal workspace. -->
+  <rect x="736" y="131" width="632" height="292" rx="18" fill="#0d1829" stroke="#30425b"/>
+  <text x="758" y="161" font-size="12" letter-spacing="2" fill="#829ab7">YOUR HORIZONTAL WORKSPACE</text>
+  <path d="M759 389H1345" stroke="#30425b" stroke-dasharray="4 6"/>
+  <rect x="758" y="185" width="184" height="180" rx="9" fill="#162239" stroke="#40516c"/>
+  <path d="M758 217H942" stroke="#40516c"/>
+  <circle cx="776" cy="201" r="3" fill="#7589a6"/>
+  <text x="788" y="206" font-size="12" fill="#afc0d5">Browser</text>
+  <rect x="776" y="235" width="147" height="56" rx="4" fill="#263b55"/>
+  <path d="M778 310h101m-101 16h126m-126 16h78" class="line"/>
+  <rect x="1212" y="185" width="134" height="180" rx="9" fill="#162239" stroke="#40516c"/>
+  <text x="1230" y="206" font-size="12" fill="#afc0d5">Notes</text>
+  <path d="M1212 217H1346" stroke="#40516c"/>
+  <path d="M1232 244h91m-91 17h73m-73 17h85m-85 17h61" class="line"/>
+  <rect x="960" y="178" width="236" height="194" rx="10" fill="url(#focus)" stroke="#7baeff" stroke-width="2"/>
+  <path d="M961 216H1195" stroke="#426b9d"/>
+  <circle cx="980" cy="198" r="4" fill="#86dfc3"/>
+  <text x="993" y="203" font-size="13" fill="#e1edff">Editor</text>
+  <path d="m984 244 11 9-11 9m22 0h20" fill="none" stroke="#86dfc3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M985 284h111m-111 18h155m-155 18h90m-90 18h129" stroke="#4b709d" stroke-width="6" stroke-linecap="round"/>
+  <rect x="1026" y="391" width="102" height="24" rx="12" fill="#243e61"/>
+  <text x="1077" y="407" font-size="11" letter-spacing="1.3" text-anchor="middle" fill="#bfdaff">FOCUSED</text>
+  <path d="M785 458h48m-10-8 10 8-10 8m458-8h48m-10-8 10 8-10 8" fill="none" stroke="#829ab7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1055" y="465" font-size="17" text-anchor="middle" fill="#bdcce0">Same widths. More room to work.</text>
+</svg>

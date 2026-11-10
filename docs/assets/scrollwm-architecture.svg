@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="600" viewBox="0 0 1440 600" role="img" aria-labelledby="title description">
+  <title id="title">Three projects. Clear boundaries.</title>
+  <desc id="description">ScrollWM.App is the WPF composition root, referencing ScrollWM.Core for deterministic strip state, layout, and session coordination, and ScrollWM.Windows for native discovery, events, placement, shortcuts, and recovery persistence. Windows adapters implement core interfaces. Original placements are journaled before managed movement.</desc>
+  <defs>
+    <style>
+      text { font-family: 'Segoe UI', Arial, sans-serif; fill: #eaf1ff; }
+      .muted { fill: #a6b9d2; }
+      .body { font-size: 18px; }
+      .eyebrow { font-size: 12px; letter-spacing: 1.8px; }
+      .connector { fill: none; stroke: #6c8cae; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="m1 1 8 4-8 4" fill="none" stroke="#6c8cae" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="1440" height="600" rx="24" fill="#0d1728"/>
+  <text x="56" y="62" class="eyebrow" fill="#86dfc3">UNDER THE HOOD</text>
+  <text x="56" y="111" font-size="40" font-weight="650" letter-spacing="-1">Three projects. Clear boundaries.</text>
+  <text x="56" y="145" font-size="19" class="muted">A native Windows shell around a platform-neutral layout and session core.</text>
+  <!-- Reference arrows start at the WPF composition root. -->
+  <path d="M700 262H755V253H810" class="connector"/>
+  <path d="M700 307H755V420H810" class="connector"/>
+  <rect x="56" y="195" width="644" height="271" rx="16" fill="#142945" stroke="#548bd1"/>
+  <rect x="80" y="220" width="128" height="27" rx="13.5" fill="#254775"/>
+  <text x="144" y="238" text-anchor="middle" class="eyebrow" fill="#c6ddff">COMPOSES</text>
+  <text x="80" y="285" font-size="31" font-weight="600">ScrollWM.App</text>
+  <text x="80" y="322" class="body muted">WPF control panel and application startup</text>
+  <text x="80" y="357" class="body muted">User commands, status, and event dispatch</text>
+  <text x="80" y="392" class="body muted">Disposable fixture windows for native checks</text>
+  <path d="M80 420H675" stroke="#325174"/>
+  <text x="80" y="445" font-size="14" fill="#bdd8ff">The app wires the core to Windows implementations.</text>
+  <rect x="811" y="195" width="573" height="140" rx="16" fill="#142b2c" stroke="#3c7d72"/>
+  <text x="835" y="231" font-size="25" font-weight="600">ScrollWM.Core</text>
+  <text x="1360" y="230" text-anchor="end" class="eyebrow" fill="#86dfc3">PLATFORM-NEUTRAL</text>
+  <text x="835" y="268" class="body muted">Strip state, layout, and session coordination</text>
+  <text x="835" y="300" font-size="16" fill="#a7d5c8">No WPF, Windows APIs, or filesystem access</text>
+  <path d="M1098 367V344" class="connector" stroke-dasharray="4 4"/>
+  <rect x="1116" y="343" width="244" height="24" rx="4" fill="#0d1728"/>
+  <text x="1128" y="360" font-size="13" class="muted">implements core interfaces</text>
+  <rect x="811" y="375" width="573" height="140" rx="16" fill="#19263b" stroke="#455d7c"/>
+  <text x="835" y="411" font-size="25" font-weight="600">ScrollWM.Windows</text>
+  <text x="1360" y="410" text-anchor="end" class="eyebrow" fill="#a6b9d2">NATIVE ADAPTERS</text>
+  <text x="835" y="448" class="body muted">Discovery, placement, events, and shortcuts</text>
+  <text x="835" y="480" font-size="16" class="muted">Monitor geometry and recovery journal persistence</text>
+  <rect x="56" y="493" width="644" height="55" rx="9" fill="#14232e" stroke="#31504d"/>
+  <path d="m78 519 6 6 12-14" fill="none" stroke="#86dfc3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="110" y="527" font-size="17" fill="#b5e2d4">Journal original state before moving a window.</text>
+  <text x="1384" y="564" text-anchor="end" font-size="13" class="muted">Solid arrows: project references · Dashed arrow: interface implementation</text>
+</svg>

@@ -1,0 +1,28 @@
+# .NET outputs and local tooling
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+TestResults/
+artifacts/
+coverage/
+.tools/
+
+# Local configuration, recovery state, and diagnostics
+.env
+.env.*
+!.env.example
+*.log
+*.dmp
+*.pfx
+*.p12
+local-data/
+recovery*.json
+settings.local.json
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

@@ -1,0 +1,27 @@
+name: Feature proposal
+description: Propose a behavior and explain the problem it solves.
+title: '[Feature]: '
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe a concrete workflow that the current plan does not cover.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior and alternatives
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Relationship to the MVP
+      options:
+        - Required for the documented MVP
+        - Follow-up after the MVP
+        - Unsure
+    validations:
+      required: true

@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible problem using non-sensitive test windows.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: 'Do not include private window titles, document contents, or recovery journals. For security issues, see SECURITY.md.'
+  - type: input
+    id: version
+    attributes:
+      label: ScrollWM version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Windows build, display count, and scaling
+      placeholder: 'Windows 11 build ..., 1 display, 125%'
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include application names and versions, expected behavior, and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Restoration result
+      description: Did pause, quit, or next-launch recovery restore the windows?
