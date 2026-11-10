@@ -131,6 +131,10 @@ Bug reports, compatibility results, documentation improvements, and focused pull
 
 Report vulnerabilities using [SECURITY.md](SECURITY.md). Changes are tracked in [CHANGELOG.md](CHANGELOG.md). Maintainers preparing the GitHub repository can follow the [publication guide](docs/publishing.md).
 
+## Support the project
+
+If ScrollWM helps your workflow, you can support its development: [Buy me a coffee](https://buymeacoffee.com/rafaelsilvabr).
+
 ## License
 
 [MIT](LICENSE) © 2026 ScrollWM contributors. The SVG artwork in `docs/assets/` is included under the same license.
