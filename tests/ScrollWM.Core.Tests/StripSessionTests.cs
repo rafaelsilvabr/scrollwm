@@ -129,7 +129,7 @@ public partial class StripSessionTests
         var desktop = new Desktop { Dpi = 144 };
         var session = Session(desktop);
         await session.StartAsync([Id(1), Id(2)]);
-        Assert.Equal(new PixelRect(9, 9, 1182, 882), session.Strip!.Viewport);
+        Assert.Equal(new PixelRect(12, 12, 1176, 876), session.Strip!.Viewport);
         Assert.Equal(18, session.Strip.Gap);
         Assert.All(session.Strip.Layout(), target => Assert.Equal(target.Bounds, desktop.Moves[target.Identity.Handle]));
     }
@@ -152,6 +152,7 @@ public partial class StripSessionTests
         public MemoryStore Store { get; } = new();
         public Dictionary<long, PixelRect> Moves { get; } = [];
         public bool ParkHidden { get; set; }
+        public bool SkipUnchangedPlacements { get; set; }
         private readonly Dictionary<long, PixelRect> logicalFrames = [];
         public HashSet<long> Closed { get; } = [];
         public HashSet<long> Excluded { get; } = [];
@@ -182,6 +183,12 @@ public partial class StripSessionTests
             logicalFrames[snapshot.Identity.Handle] = target;
             Move(snapshot, ParkHidden ? MonitorPlacement.PhysicalTarget(target, viewport, GetDisplayConfiguration()) : target);
             WindowDisplays[snapshot.Identity.Handle] = display.Id;
+        }
+        public bool UpdatePlacement(WindowSnapshot snapshot, PixelRect target, DisplayInfo display, PixelRect viewport)
+        {
+            var before = Moves.GetValueOrDefault(snapshot.Identity.Handle);
+            MoveOnDisplay(snapshot, target, display, viewport);
+            return !SkipUnchangedPlacements || before != Moves[snapshot.Identity.Handle];
         }
         public PixelRect GetSingleDisplayWorkArea() => MultipleDisplays
             ? throw new InvalidOperationException("Multiple displays.") : new(0, 0, 1200, 900);
@@ -248,8 +255,62 @@ public partial class StripSessionTests
         Assert.Equal(0, session.Strip.Offset);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData(DesktopWindowEventKind.Restored)]
+    [InlineData(DesktopWindowEventKind.LocationChanged)]
+    [InlineData(DesktopWindowEventKind.Foreground)]
+    [InlineData(DesktopWindowEventKind.MoveSizeEnded)]
+    public async Task AutoEnrollmentAddsWindowThatWasMaximizedBeforeStart(DesktopWindowEventKind? notification)
+    {
+        var desktop = new Desktop();
+        desktop.Excluded.Add(2);
+        var session = Session(desktop);
+        await session.StartAsync([Id(1)], automaticEnrollment: true);
+        var width = session.Strip!.Columns[0].Width;
+        Assert.Single(session.Strip.Columns);
+        desktop.Excluded.Remove(2);
+        await session.ReconcileAsync(notification is { } kind ? [new(2, kind)] : null);
+        Assert.Equal(new long[] { 1, 2 }, session.Strip.Columns.Select(item => item.Identity.Handle));
+        Assert.Equal(width, session.Strip.Columns[0].Width);
+        Assert.Equal(Id(1), session.Strip.Focused);
+        Assert.Equal(2, desktop.Store.Journal!.Windows.Length);
+        await session.ReconcileAsync();
+        Assert.Equal(2, desktop.Store.Journal.Windows.Length);
+    }
+
     [Fact]
-    public async Task MinimizeRestoreKeepsChosenWidthAndDoesNotCaptureAgain()
+    public async Task WindowStillMaximizedAtResumeCanJoinWhenRestored()
+    {
+        var desktop = new Desktop();
+        desktop.Excluded.Add(2);
+        var session = Session(desktop);
+        await session.StartAsync([Id(1)], automaticEnrollment: true);
+        await session.PauseAsync();
+        await session.ResumeAsync();
+        desktop.Excluded.Remove(2);
+        await session.ReconcileAsync([new(2, DesktopWindowEventKind.LocationChanged)]);
+        Assert.Equal(new long[] { 1, 2 }, session.Strip!.Columns.Select(item => item.Identity.Handle));
+    }
+
+    [Fact]
+    public async Task RestoredUnmanagedWindowStaysOutsideWhenAutomaticEnrollmentIsOff()
+    {
+        var desktop = new Desktop();
+        desktop.Excluded.Add(2);
+        var session = Session(desktop);
+        await session.StartAsync([Id(1)]);
+        desktop.Excluded.Remove(2);
+        await session.ReconcileAsync([new(2, DesktopWindowEventKind.LocationChanged)]);
+        await session.ReconcileAsync();
+        Assert.Equal(Id(1), Assert.Single(session.Strip!.Columns).Identity);
+        Assert.Single(desktop.Store.Journal!.Windows);
+    }
+
+    [Theory]
+    [InlineData(DesktopWindowEventKind.Restored)]
+    [InlineData(DesktopWindowEventKind.LocationChanged)]
+    public async Task MinimizeRestoreKeepsChosenWidthAndDoesNotCaptureAgain(DesktopWindowEventKind restoredEvent)
     {
         var desktop = new Desktop();
         var session = Session(desktop);
@@ -260,7 +321,7 @@ public partial class StripSessionTests
         await session.ReconcileAsync([new(1, DesktopWindowEventKind.Minimized)]);
         Assert.DoesNotContain(session.Strip.Columns, item => item.Identity == Id(1));
         desktop.Excluded.Remove(1);
-        await session.ReconcileAsync([new(1, DesktopWindowEventKind.Restored)]);
+        await session.ReconcileAsync([new(1, restoredEvent)]);
         Assert.Equal(column, session.Strip.Columns.Single(item => item.Identity == Id(1)));
         Assert.Equal(2, desktop.Store.Journal!.Windows.Length);
     }

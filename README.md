@@ -21,7 +21,7 @@ ScrollWM is an experimental, open source scrolling window manager for **Windows 
 
 **Status: developer preview.** Multi-monitor strips are implemented; the everyday MVP is still in development. ScrollWM is a working name.
 
-**[Download v0.0.1 for Windows x64](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.1)** — a self-contained `.exe` and a portable ZIP with the license and usage notes. No .NET installation is needed to run the packaged app. The executable is unsigned.
+**[Download v0.0.2 for Windows x64](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.2)** — a self-contained `.exe` and a portable ZIP with the license and usage notes. No .NET installation is needed to run the packaged app. The executable is unsigned.
 
 ## A workspace that moves with you
 
@@ -32,7 +32,7 @@ ScrollWM is an experimental, open source scrolling window manager for **Windows 
 - **Keep your widths.** Choose a third, half, two thirds, or full width. Adding a window preserves existing widths; application minimum sizes take precedence.
 - **Navigate and reorder.** Focus the previous or next column, move a column, or cycle its width with global shortcuts.
 - **Use multiple monitors.** Each monitor keeps its own order, focus, widths, and scroll offset. Transfer the focused window to the next monitor.
-- **Choose what joins.** Start explicitly with selected windows, add open windows, or opt into automatic enrollment of newly opened eligible windows.
+- **Choose what joins.** Start explicitly with selected windows, add open windows, or opt into automatic adding of newly opened and restored eligible windows.
 - **Restore your desktop.** Original placements and window shapes are journaled before movement. Pause restores them; recovery retains entries that could not be restored.
 - **Keep data local.** No account, network service, or telemetry. Recovery data stays on your machine.
 
@@ -40,7 +40,7 @@ See the [illustrated control-panel preview](docs/assets/scrollwm-ui.svg) and the
 
 ## Try the preview
 
-For the packaged app, download `ScrollWM-0.0.1-win-x64.zip` from the [release page](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.1), extract it, and run `ScrollWM.exe`. The standalone `ScrollWM-0.0.1-win-x64.exe` runs the same app. See the [release notes](docs/releases/v0.0.1.md) for checksums, first-run instructions, and limitations.
+For the packaged app, download `ScrollWM-0.0.2-win-x64.zip` from the [release page](https://github.com/rafaelsilvabr/scrollwm/releases/tag/v0.0.2), extract it, and run `ScrollWM.exe`. The standalone `ScrollWM-0.0.2-win-x64.exe` runs the same app. See the [release notes](docs/releases/v0.0.2.md) for checksums, first-run instructions, and limitations.
 
 ### Build from source
 

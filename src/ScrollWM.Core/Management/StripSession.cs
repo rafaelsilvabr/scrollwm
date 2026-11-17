@@ -23,6 +23,8 @@ public interface IStripDesktop : IRestorableWindows
         [new("default", GetSingleDisplayWorkArea(), GetSingleDisplayWorkArea(), 96, true)];
     string GetWindowDisplay(WindowIdentity identity) => GetDisplayConfiguration()[0].Id;
     void MoveOnDisplay(WindowSnapshot snapshot, PixelRect target, DisplayInfo display, PixelRect viewport) => Move(snapshot, target);
+    bool UpdatePlacement(WindowSnapshot snapshot, PixelRect target, DisplayInfo display, PixelRect viewport)
+    { MoveOnDisplay(snapshot, target, display, viewport); return true; }
     void EnsurePresentation(WindowSnapshot snapshot, DisplayInfo display, PixelRect viewport) { }
     void SuspendPresentation(WindowSnapshot snapshot) => RestorePresentation(snapshot);
     void PlaceBehind(IReadOnlyList<WindowSnapshot> edges, IReadOnlyList<WindowSnapshot> visible) { }
@@ -84,7 +86,9 @@ public sealed class StripSession(IStripDesktop desktop, IRecoveryStore store, Fu
         var identities = selected.OrderByDescending(item => item.Handle == foreground).ToArray();
         var configuration = ReadDisplays();
         baseline.Clear();
-        baseline.UnionWith(desktop.EnumerateKnownWindows());
+        // Existing eligible windows were offered for explicit selection.
+        // Maximized/minimized windows must remain eligible for later enrollment.
+        baseline.UnionWith(desktop.EnumerateEligibleWindows());
         var captured = recovery.Begin(identities);
         ownsCapture = true;
         Displays = configuration;
@@ -92,7 +96,7 @@ public sealed class StripSession(IStripDesktop desktop, IRecoveryStore store, Fu
         gestureOrigins.Clear(); interactions.Clear(); managedHandles.Clear();
         retiredClosed = 0; focusPending = false; autoEnroll = automaticEnrollment;
         foreach (var display in Displays)
-        { strips.Add(display.Id, new(display.WorkArea, display.Scale(12), MonitorPlacement.Margin(display, Displays.Count))); }
+        { strips.Add(display.Id, new(display.WorkArea, display.Scale(12), MonitorPlacement.Margin(display))); }
         ActiveDisplayId = Displays.FirstOrDefault(item => item.Primary)?.Id ?? Displays[0].Id;
         foreach (var snapshot in captured)
         {
@@ -184,7 +188,9 @@ public sealed class StripSession(IStripDesktop desktop, IRecoveryStore store, Fu
         ValidateDesktop(); Prune();
         var batch = notifications?.ToArray();
         var inventoryNeeded = batch is null || batch.Any(item => item.Kind is DesktopWindowEventKind.Created or
-            DesktopWindowEventKind.Shown or DesktopWindowEventKind.Restored or DesktopWindowEventKind.StateChanged);
+            DesktopWindowEventKind.Shown or DesktopWindowEventKind.Restored or DesktopWindowEventKind.StateChanged ||
+            item.Kind is DesktopWindowEventKind.Foreground or DesktopWindowEventKind.LocationChanged or DesktopWindowEventKind.MoveSizeEnded &&
+            (!managedHandles.ContainsKey(item.Handle) || suspended.Keys.Any(identity => identity.Handle == item.Handle)));
         var eligible = (suspended.Count > 0 || autoEnroll) && inventoryNeeded ? desktop.EnumerateEligibleWindows() : [];
         foreach (var pair in suspended.OrderBy(item => item.Value.Index).ToArray())
         {
@@ -251,7 +257,7 @@ public sealed class StripSession(IStripDesktop desktop, IRecoveryStore store, Fu
     {
         if (Running || AllColumns.Count == 0) { throw new InvalidOperationException("There is no paused strip to resume."); }
         ValidateDesktop();
-        baseline.UnionWith(desktop.EnumerateKnownWindows());
+        baseline.UnionWith(desktop.EnumerateEligibleWindows());
         autoEnroll = automaticEnrollment ?? autoEnroll;
         var captured = recovery.Begin(AllColumns.Select(item => item.Identity));
         ownsCapture = true;
@@ -371,13 +377,14 @@ public sealed class StripSession(IStripDesktop desktop, IRecoveryStore store, Fu
             {
                 var pending = dirty.ToArray();
                 var targets = pending.SelectMany(id => strips[id].Layout().Select(target => (Id: id, Target: target))).ToArray();
+                var needsSettlement = false;
                 foreach (var entry in targets)
                 {
                     var snapshot = snapshots[entry.Target.Identity];
                     if (desktop.ReadDpi(snapshot) == 0) { throw new InvalidOperationException("The window's DPI is unavailable."); }
-                    desktop.MoveOnDisplay(snapshot, entry.Target.Bounds, Display(entry.Id), strips[entry.Id].Viewport);
+                    needsSettlement |= desktop.UpdatePlacement(snapshot, entry.Target.Bounds, Display(entry.Id), strips[entry.Id].Viewport);
                 }
-                await settleFrames();
+                if (needsSettlement) { await settleFrames(); }
                 if (!interactions.IsEmpty) { return; }
                 var adjusted = false;
                 foreach (var entry in targets)

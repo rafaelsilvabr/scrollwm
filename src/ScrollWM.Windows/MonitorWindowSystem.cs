@@ -5,8 +5,13 @@ using ScrollWM.Windows.Native;
 
 namespace ScrollWM.Windows;
 
+public sealed record PlacementActivity(long PositionWrites, long RegionWrites);
+
 public sealed partial class NativeWindowSystem
 {
+    private long positionWrites;
+    private long regionWrites;
+    public PlacementActivity LayoutActivity => new(positionWrites, regionWrites);
     private readonly HashSet<long> placingRegions = [];
     private readonly Dictionary<long, int> regionRepairs = [];
     private sealed record ProjectedFrame(long Token, PixelRect Logical, PixelRect Physical, PixelRect Outer, bool OutsideDesktop);
@@ -53,6 +58,9 @@ public sealed partial class NativeWindowSystem
     }
 
     public void MoveOnDisplay(WindowSnapshot snapshot, PixelRect target, DisplayInfo display, PixelRect viewport)
+        => UpdatePlacement(snapshot, target, display, viewport);
+
+    public bool UpdatePlacement(WindowSnapshot snapshot, PixelRect target, DisplayInfo display, PixelRect viewport)
     {
         RequireIdentity(snapshot);
         var configuration = GetDisplayConfiguration();
@@ -60,26 +68,33 @@ public sealed partial class NativeWindowSystem
         if (target.Width > viewport.Width || target.Height > viewport.Height)
         { throw ClipRejected(snapshot, "is too large to fit fully on this monitor"); }
         var physical = MonitorPlacement.PhysicalTarget(target, viewport, configuration);
-        // Blank the old region before moving: its local coordinates would
-        // otherwise travel across a neighbor until the new clip is installed.
+        // Every physical target is fully on its owner or beyond all screens.
+        // Do not blank windows during focus changes or same-monitor moves.
         var frame = ReadPositionedFrame(snapshot);
         if (!NativeMethods.GetWindowRect((nint)snapshot.Identity.Handle, out var outer)) { throw NativeError("Could not read window bounds"); }
-        SetRegion((nint)snapshot.Identity.Handle, MonitorNativeMethods.CreateRectRgn(0, 0, 0, 0));
         var leftBorder = frame.Left - outer.Left;
         var topBorder = frame.Top - outer.Top;
         var rightBorder = outer.Right - frame.Right;
         var bottomBorder = outer.Bottom - frame.Bottom;
         var requestedOuter = new PixelRect(physical.Left - leftBorder, physical.Top - topBorder,
             physical.Width + leftBorder + rightBorder, physical.Height + topBorder + bottomBorder);
-        if (!NativeMethods.SetWindowPos((nint)snapshot.Identity.Handle, 0, requestedOuter.Left, requestedOuter.Top,
-            requestedOuter.Width, requestedOuter.Height, 0x0004 | 0x0010 | 0x0200))
-        { throw NativeError("Window positioning failed"); }
+        var moved = Convert(outer) != requestedOuter;
+        var resized = outer.Right - outer.Left != requestedOuter.Width || outer.Bottom - outer.Top != requestedOuter.Height;
+        if (moved)
+        {
+            if (!NativeMethods.SetWindowPos((nint)snapshot.Identity.Handle, 0, requestedOuter.Left, requestedOuter.Top,
+                requestedOuter.Width, requestedOuter.Height, 0x0004 | 0x0010 | 0x0200))
+            { throw NativeError("Window positioning failed"); }
+            positionWrites++;
+        }
         if (physical == target) { projectedFrames.Remove(snapshot.Identity); }
         else { projectedFrames[snapshot.Identity] = new(snapshot.RecoveryToken, target, physical, requestedOuter,
             !MonitorPlacement.Intersects(target, viewport)); }
         placingRegions.Add(snapshot.Identity.Handle);
-        try { EnsurePresentation(snapshot, display, viewport); }
+        var previousRegions = regionWrites;
+        try { EnsurePresentation(snapshot, display, viewport, resized); }
         finally { placingRegions.Remove(snapshot.Identity.Handle); }
+        return moved || regionWrites != previousRegions;
     }
 
     public PixelRect ReadManagedFrame(WindowSnapshot snapshot)
@@ -105,6 +120,9 @@ public sealed partial class NativeWindowSystem
     }
 
     public void EnsurePresentation(WindowSnapshot snapshot, DisplayInfo display, PixelRect viewport)
+        => EnsurePresentation(snapshot, display, viewport, false);
+
+    private void EnsurePresentation(WindowSnapshot snapshot, DisplayInfo display, PixelRect viewport, bool resized)
     {
         RequireIdentity(snapshot);
         var handle = (nint)snapshot.Identity.Handle;
@@ -140,7 +158,8 @@ public sealed partial class NativeWindowSystem
         try
         {
             var permitted = RegionBounds(expected);
-            if (MonitorClip.Accepts(permitted, CurrentDrawingBounds(handle, current)))
+            var drawing = CurrentDrawingBounds(handle, current);
+            if (MonitorClip.Accepts(permitted, drawing) && (!resized || drawing == permitted))
             { regionRepairs.Remove(snapshot.Identity.Handle); return; }
             if (!placingRegions.Contains(snapshot.Identity.Handle))
             {
@@ -152,6 +171,7 @@ public sealed partial class NativeWindowSystem
             // verification; never delete a region that Windows now owns.
             var data = RegionData(expected);
             SetRegion(handle, CreateRegion(data, 1));
+            regionWrites++;
             if (!MonitorClip.Accepts(permitted, CurrentDrawingBounds(handle, current)))
             { throw ClipRejected(snapshot, "could not keep its window inside the monitor clip"); }
         }

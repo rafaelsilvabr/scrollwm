@@ -38,7 +38,9 @@ public static class MonitorPlacement
         rectangle.Top >= container.Top && rectangle.Right <= container.Right && rectangle.Bottom <= container.Bottom;
 
     // Leave space for invisible resize borders as well as the visible frame.
-    public static int Margin(DisplayInfo display, int displayCount) => display.Scale(displayCount > 1 ? 8 : 6);
+    // Chromium replaces clips that cut its resize border. Reserve that space
+    // on a single monitor too, so edge windows do not need such a clip.
+    public static int Margin(DisplayInfo display) => display.Scale(8);
 
     // DWM can report outer bounds for a parked custom-frame window. Use the
     // known frame-to-outer offsets; retain real size and position changes.

@@ -1,5 +1,34 @@
 # Compact UI verification
 
+## Restored-window automatic adding — 2026-11-17
+
+Automatic adding previously put all known windows into its exclusion baseline, including maximized windows absent from the selection list. The baseline now includes only windows eligible at Start or Resume. Previously ineligible windows can join when restored, while eligible windows deliberately left unselected remain outside. Foreground, location, and completed-move events request an inventory for unmanaged or suspended windows; ordinary managed location changes retain their existing fast path. The two-second fallback remains active.
+
+Seven new regression cases failed before the fix: restored enrollment through fallback and four event types, restored enrollment after Resume, and a suspended column returning on a location event. All now pass. Additional coverage checks that automatic adding stays off by default, existing widths and background focus survive, and repeated reconciliation does not duplicate capture. The complete suite passes: 113 core and 9 Windows tests. The final Release solution build has zero warnings/errors.
+
+Live GUI check at 100% scale on one monitor: opened two marked disposable windows, maximized the second before opening the preview, selected only the first, and enabled **Add windows automatically**. Start showed one managed window. Restoring the second via window activation automatically increased the strip to two, each at 946 px Half. The other five existing eligible windows remained outside. The checked option, updated label, Running state, and both rows were visually verified. Closing the preview restored the test windows before cleanup. This check used disposable windows rather than a browser; mixed-DPI and two-monitor restored enrollment were not exercised.
+
+## Chrome single-monitor clipping — 2026-11-17
+
+One 1920 × 1200 monitor at 100% scale was connected. Chrome reproduced the user's failure with the 6 pixel margin: Center passed, then LeftPartial failed because the 7 pixel invisible resize border extended past the screen and Chrome removed the imposed region. The failed probe restored the original frame and region exactly, with no pending recovery entries.
+
+Single-monitor strips now use the same 8 pixel margin as multi-monitor strips. The repeated Chrome probe passed Center, both partial edges, both off-screen parking positions, and FullWidth. Repeating each placement caused no position or region writes. Every outer frame stayed on its owning screen or outside all screens; original placement and region restored exactly with no pending entries. Reports remain ignored under `artifacts/chrome-clip-before/` and `artifacts/chrome-clip-after/`.
+
+The corrected GUI was tested with the actual Chrome, Visual Studio Code, WhatsApp, and File Explorer windows. Start, changing Chrome from Half to Two thirds, Next, Pause, and Resume completed without the clipping error. The Running state remained visible after resume. The tested GUI came from this worktree, rather than the older build in the original checkout. The app was left paused with all four windows restored.
+
+Release build: zero warnings/errors. All 105 core and 9 Windows tests pass, including resize-border geometry at 100%, 125%, 150%, and 200% scale. All 16 disposable-window report checks pass, covering unchanged-layout/focus writes, overlap visibility, minimize/restore, pause/resume, and fresh-process crash recovery. Checks relating to a second display were not exercised; `TwoMonitorChecksExecuted` is false in `artifacts/chrome-clip-fixtures/report.json`. Hardware validation above 100% and the visual Alt+Tab flicker check remain pending.
+
+## Focus redraw correction — 2026-11-10
+
+The user reported flicker when switching windows and using Alt+Tab. The placement adapter previously assigned an empty region before every layout, including focus changes with no physical movement. It now keeps windows drawn, skips unchanged `SetWindowPos` calls, and reports whether placement/presentation actually changed. The coordinator skips its settlement delay for unchanged layouts. A size change can still refresh an outdated clip without first blanking the window.
+
+- All six projects build in Release with zero warnings/errors. All 101 core tests pass, including visible-focus and overlapping-edge focus without settlement when physical frames stay unchanged.
+- Chrome and File Explorer passed all 24 native position checks on the two connected monitors. Every repeated placement reported no position/region writes and no need to settle. Both original frames and regions matched after restoration, with zero pending entries.
+- The expanded fixture verifier records layout activity around unchanged layout, visible focus, and edge reveal. Its fixture host could not start because Windows Application Control blocked `ScrollWM.App.dll` with `0x800711C7`; no fixture check passed in that run. Cleanup left zero pending entries.
+- A visual Alt+Tab/focus check of the rebuilt GUI remains pending. Security settings were not changed. Earlier visual records below describe the previous build.
+
+Raw reports remain ignored in `artifacts/focus-real-apps/report.json` and `artifacts/focus-redraw-check/report.json`.
+
 ## Edge overlap check — 2026-11-09
 
 Windows 11, two monitors at 100%. Only two marked disposable windows were managed in the controlled UI session.

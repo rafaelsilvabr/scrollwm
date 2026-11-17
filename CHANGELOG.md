@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.0.2 — 2026-11-17
+
+- Add previously maximized or minimized windows when restored during a running session with automatic adding enabled. Preserve existing eligible windows left unselected and detect restoration through location or foreground events as well as the fallback scan.
+- Use an 8 pixel outer margin on single monitors too, leaving room for Chrome's invisible resize border instead of applying a clip that Chrome rejects.
+- Remove temporary blanking during window switching. Skip unchanged physical placements and wait for frame settlement only after an actual placement or clipping change.
+- Preserve the existing edge overlap and monitor isolation while making focus changes with unchanged geometry immediate. Add focus/edge settlement regressions and native placement-write diagnostics.
+- Verify 122 automated tests, six native Chrome placement checks, and single-monitor disposable-window focus, overlap, pause/resume, and crash recovery checks. Exercise Chrome resizing/navigation and automatic adding after restoration in the GUI. Visual Alt+Tab flicker verification and updated two-monitor hardware checks remain pending.
+
 ## 0.0.1 — 2026-11-09
 
 - Publish the first developer preview as a self-contained Windows x64 executable and portable ZIP, with SHA-256 checksums and a repeatable tag-triggered release workflow.

@@ -19,6 +19,7 @@ internal static class MonitorFixtureVerification
         start.ArgumentList.Add("--fixture"); start.ArgumentList.Add("5");
         using var child = Process.Start(start) ?? throw new InvalidOperationException("Could not open the disposable monitor fixtures.");
         var checks = new Dictionary<string, bool>();
+        var activity = new Dictionary<string, PlacementActivity>();
         var store = new JsonRecoveryStore(directory);
         var session = new StripSession(native, store);
         WindowCandidate[] fixtures = [];
@@ -54,6 +55,15 @@ internal static class MonitorFixtureVerification
             checks["DisplayOwnership"] = session.Strips.Count == displays.Count &&
                 session.AllColumns.Count == 5 && (displays.Count < 2 || session.Strips[displays[0].Id].Columns.Count == 2 && session.Strips[displays[1].Id].Columns.Count == 3);
             checks["InitialPlacementAndClipping"] = Matches();
+            activity["BeforeUnchangedLayout"] = native.LayoutActivity;
+            foreach (var pair in session.Strips)
+            foreach (var target in pair.Value.Layout())
+            {
+                native.MoveOnDisplay(store.Load()!.Windows.Single(item => item.Identity == target.Identity), target.Bounds,
+                    displays.Single(item => item.Id == pair.Key), pair.Value.Viewport);
+            }
+            activity["AfterUnchangedLayout"] = native.LayoutActivity;
+            checks["UnchangedLayoutDoesNotMoveOrBlank"] = activity["BeforeUnchangedLayout"] == activity["AfterUnchangedLayout"];
             var sleepy = fixtures[^1].Identity;
             NativeWindowSystem.MinimizeTestFixture(sleepy.Handle, true);
             await Task.Delay(100);
@@ -67,7 +77,10 @@ internal static class MonitorFixtureVerification
             var otherFrames = displays.Count > 1 ? session.Strips[displays[1].Id].Layout() : [];
             var otherOuterFrames = otherFrames.ToDictionary(item => item.Identity, item => native.ReadOuterFrame(item.Identity.Handle));
             var otherColumns = displays.Count > 1 ? session.Strips[displays[1].Id].Columns.ToArray() : [];
+            activity["BeforeVisibleFocus"] = native.LayoutActivity;
             await session.NavigateAsync(1);
+            activity["AfterVisibleFocus"] = native.LayoutActivity;
+            checks["VisibleFocusDoesNotMoveOrBlank"] = activity["BeforeVisibleFocus"] == activity["AfterVisibleFocus"];
             await session.CycleWidthAsync();
             var partial = session.Strips.SelectMany(pair => pair.Value.Layout().Where(target =>
                 MonitorPlacement.Intersects(target.Bounds, pair.Value.Viewport) && !MonitorPlacement.Contains(pair.Value.Viewport, target.Bounds))
@@ -86,13 +99,17 @@ internal static class MonitorFixtureVerification
             var edgeToReveal = partial[0];
             await session.SetActiveDisplayAsync(edgeToReveal.Display);
             var savedWidths = session.AllColumns.ToDictionary(item => item.Identity, item => item.Width);
-            while (session.Strip!.Focused != edgeToReveal.Target.Identity)
+            activity["BeforeEdgeFocus"] = native.LayoutActivity;
+            for (var attempt = 0; attempt < session.AllColumns.Count && session.Strip!.Focused != edgeToReveal.Target.Identity; attempt++)
             {
                 var columns = session.Strip.Columns.ToList();
                 var direction = columns.FindIndex(item => item.Identity == edgeToReveal.Target.Identity) > columns.FindIndex(item => item.Identity == session.Strip.Focused) ? 1 : -1;
                 await session.NavigateAsync(direction);
             }
+            activity["AfterEdgeFocus"] = native.LayoutActivity;
+            checks["EdgeFocusDoesNotMoveOrBlank"] = activity["BeforeEdgeFocus"] == activity["AfterEdgeFocus"];
             checks["FocusRevealsEdgeWithoutChangingWidths"] = Matches() &&
+                session.Strip!.Focused == edgeToReveal.Target.Identity &&
                 MonitorPlacement.Contains(session.Strip.Viewport, session.Strip.Layout().Single(item => item.Identity == edgeToReveal.Target.Identity).Bounds) &&
                 session.AllColumns.All(item => item.Width == savedWidths[item.Identity]);
             if (displays.Count > 1)
@@ -129,7 +146,7 @@ internal static class MonitorFixtureVerification
             var path = Path.GetFullPath(reportPath);
             Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             var json = JsonSerializer.Serialize(new { DisplayCount = displays.Count, TwoMonitorChecksExecuted = displays.Count >= 2,
-                Checks = checks, PauseRestore = pauseRestore, CrashRestore = crashRestore, Cleanup = session.LastRestore }, new JsonSerializerOptions { WriteIndented = true });
+                Checks = checks, Activity = activity, PauseRestore = pauseRestore, CrashRestore = crashRestore, Cleanup = session.LastRestore }, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(path, json); Console.WriteLine(json);
         }
         return checks.Count >= 8 && checks.Values.All(value => value) ? 0 : 2;

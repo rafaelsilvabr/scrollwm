@@ -8,6 +8,26 @@ namespace ScrollWM.Core.Tests;
 public partial class StripSessionTests
 {
     [Fact]
+    public async Task FocusAndEdgeRevealSkipSettlementWhenPhysicalFramesAreUnchanged()
+    {
+        var desktop = TwoDisplays();
+        desktop.ParkHidden = true;
+        desktop.SkipUnchangedPlacements = true;
+        var settlements = 0;
+        var session = new StripSession(desktop, desktop.Store, () => { settlements++; return Task.CompletedTask; });
+        await session.StartAsync([Id(1), Id(2), Id(3)]);
+        var initial = settlements;
+        await session.NavigateAsync(1);
+        Assert.Equal(Id(2), session.Strip!.Focused);
+        Assert.Equal(initial, settlements);
+        await session.CycleWidthAsync();
+        Assert.True(settlements > initial);
+        var afterResize = settlements;
+        await session.NavigateAsync(-1);
+        Assert.Equal(Id(1), session.Strip.Focused);
+        Assert.Equal(afterResize, settlements);
+    }
+    [Fact]
     public async Task LongStripParksHiddenColumnsAndExternalFocusRevealsThemOnTheirOwnMonitor()
     {
         var desktop = TwoDisplays();

@@ -50,8 +50,8 @@ The tag-triggered **Release** workflow builds and tests the solution, publishes 
 For local packaging on Windows with the .NET 10 SDK:
 
 ```powershell
-./scripts/build-release.ps1 -Version 0.0.1
+./scripts/build-release.ps1 -Version 0.0.2
 # Or add -DotNetPath ./.tools/dotnet/dotnet.exe for a project-local SDK.
 ```
 
-Outputs are under ignored `artifacts/releases/v0.0.1/assets/`. The script requires a fresh output directory and stops on build, test, packaging, or version errors. Inspect the ZIP and smoke-test the executable before pushing the release tag. After committing the release changes and pushing `main`, push `v0.0.1` to trigger publication. Never move a published tag to a different commit; release a new version instead.
+Outputs are under ignored `artifacts/releases/v0.0.2/assets/`. The script requires a fresh output directory and stops on build, test, packaging, or version errors. Inspect the ZIP and smoke-test the executable before pushing the release tag. After committing the release changes and pushing the release commit on the intended branch, push `v0.0.2` to trigger publication. Never move a published tag to a different commit; release a new version instead.

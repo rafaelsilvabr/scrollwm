@@ -46,6 +46,8 @@ Edge columns shift inside their owning viewport without resizing and overlap ben
 
 ## Initial code versus planned code
 
+During layout, the native adapter reports whether physical placement or clipping changed. Matching outer bounds cause no positioning write, and focus changes do not pass through an empty window region. Logical projections still update when an overlapping edge becomes focused without moving physically. Settlement is awaited only after a real placement/presentation change; actual frames and monitor bounds are still verified before focus/ordering completes.
+
 Currently implemented: a WPF selected-window strip preview and M0 workbench; platform-neutral ordered columns, viewport scrolling, width cycling, minimum-width feedback, and reordering; serialized capture-before-move session orchestration with manual additions and pause/resume; native discovery/filtering, placement, DPI, identity markers, atomic journaling, session locking, and global shortcuts. Native fixture tooling exercises recovery across separate processes and the strip lifecycle.
 
 The preview starts through explicit selection. Native events and a two-second fallback drive lifecycle reconciliation, with an unchecked per-session option to enroll newly opened eligible windows. Settings, tray controls, session lock/sleep handling, and full lifecycle compatibility verification remain planned work. Single-display fixtures and open Notepad/Chrome windows support direct off-screen physical placement at 100% scale. Broader adoption remains gated on editor/terminal/Explorer and higher DPI; see [the experiment record](m0-experiment.md) and [decision 0003](decisions/0003-opt-in-lifecycle-preview.md).

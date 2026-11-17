@@ -122,8 +122,8 @@
           <Border x:Name="ReadinessPanel" Padding="10,8" CornerRadius="4" Background="#F1F5F9">
             <TextBlock x:Name="StripReadiness" TextWrapping="Wrap" />
           </Border>
-          <CheckBox x:Name="AutoEnrollCheck" Margin="0,10,0,0" Content="Add new windows automatically"
-                    ToolTip="Adds newly opened eligible windows during this session. Pause the strip to change this option." />
+          <CheckBox x:Name="AutoEnrollCheck" Margin="0,10,0,0" Content="Add windows automatically"
+                    ToolTip="Adds newly opened windows and windows restored from maximized or minimized when they become eligible. Pause the strip to change this option." />
         </StackPanel>
         <Grid Grid.Row="2">
           <Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="16" /><ColumnDefinition /></Grid.ColumnDefinitions>

@@ -25,7 +25,7 @@ internal static class SelectedMonitorProbe
             foreach (var probe in Enumerable.Range(0, 6))
             {
                 var viewport = new ScrollingStrip(display.WorkArea, display.Scale(12),
-                    MonitorPlacement.Margin(display, native.GetDisplayConfiguration().Count)).Viewport;
+                    MonitorPlacement.Margin(display)).Viewport;
                 var position = probe == 5 ? "FullWidth" : ((ProbePosition)probe).ToString();
                 var target = probe == 5 ? viewport : ProbeLayout.Target(viewport, viewport.Width / 2, (ProbePosition)probe);
                 var application = chosen.Single(item => item.Identity == snapshot.Identity).ProcessName;
@@ -44,9 +44,14 @@ internal static class SelectedMonitorProbe
                         ? native.GetDisplayConfiguration().All(item => !MonitorPlacement.Intersects(outer, item.Bounds))
                         : native.GetDisplayConfiguration().Count == 1 || MonitorPlacement.Contains(display.Bounds, outer);
                     if (!isolated) { throw new InvalidOperationException("The selected window's outer frame crossed a monitor boundary."); }
+                    var activityBefore = native.LayoutActivity;
+                    var repeatedNeedsSettlement = native.UpdatePlacement(snapshot, target, display, viewport);
+                    var unchanged = !repeatedNeedsSettlement && native.LayoutActivity == activityBefore;
+                    if (!unchanged) { throw new InvalidOperationException("An unchanged placement caused a redundant move or clipping write."); }
                     results.Add(new { Application = application, Display = display.Primary ? "Primary" : "Secondary",
                         Position = position, Target = target, Frame = native.ReadPositionedFrame(snapshot),
-                        Outer = outer, PhysicallyIsolated = isolated, Clip = native.ReadPresentationBounds(snapshot.Identity.Handle), Passed = true });
+                        Outer = outer, PhysicallyIsolated = isolated, UnchangedPlacementNoWrites = unchanged,
+                        Clip = native.ReadPresentationBounds(snapshot.Identity.Handle), Passed = true });
                 }
                 catch (Exception error)
                 {

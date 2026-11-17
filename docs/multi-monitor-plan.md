@@ -30,9 +30,15 @@ The recovery journal saves original placements, window regions, outer bounds, an
 
 Exact restoration is used when the original monitor context is unchanged. If that monitor is absent or reconfigured, recovery centers the original logical size in the available work area, using the matching monitor or primary monitor. An unverified or rejected restore stays pending. Applications whose minimum size or custom region behavior prevents safe placement may require pause/recovery instead of continued management.
 
-The 6 pixel single-monitor margin, 8 pixel multi-monitor margin, and 12 pixel gap are logical defaults at 96 DPI and scale independently. The extra multi-monitor margin leaves room for invisible resize borders. Width presets include gaps: two halves and three thirds fit as whole windows. Custom widths and learned minimums scale by the source/destination DPI ratio when transferred; adding windows preserves existing widths.
+The 8 pixel outer margin and 12 pixel gap are logical defaults at 96 DPI and scale independently. The margin leaves room for invisible resize borders on both single and multiple monitors. Width presets include gaps: two halves and three thirds fit as whole windows. Custom widths and learned minimums scale by the source/destination DPI ratio when transferred; adding windows preserves existing widths.
 
 ## Verification
+
+### Focus redraw correction — 2026-11-10
+
+Focus changes no longer blank all windows before repositioning. Physical placement is skipped when the actual outer bounds already match, while logical edge/parking projections still update. Existing valid clips are retained; resized windows can refresh stale clip bounds without an empty intermediate region. The coordinator waits for frame settlement only when placement or clipping actually changed. Identity checks, original captures, recovery, overlap ordering, and monitor-bound checks remain active.
+
+The Release build passes with zero warnings/errors and 101 core tests. All 24 native Chrome/Explorer checks pass, including unchanged-placement idempotency and exact original-frame/region restoration. The GUI fixture host was blocked by Windows Application Control (`0x800711C7`), so its expanded focus-write checks and visual Alt+Tab verification remain pending. The earlier fixture results below predate this correction. See [the UI record](ui-verification.md#focus-redraw-correction--2026-11-10).
 
 Run the fixture tool with the preview closed:
 

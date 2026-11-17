@@ -1,10 +1,35 @@
 using ScrollWM.Core.Windows;
+using ScrollWM.Core.Layout;
 using Xunit;
 
 namespace ScrollWM.Core.Tests;
 
 public sealed class MonitorPlacementTests
 {
+    [Theory]
+    [InlineData(96)]
+    [InlineData(120)]
+    [InlineData(144)]
+    [InlineData(192)]
+    public void SingleMonitorEdgePlacementsLeaveRoomForChromiumResizeBorders(uint dpi)
+    {
+        var display = new DisplayInfo("single", new(0, 0, 3840, 2400), new(0, 0, 3840, 2320), dpi, true);
+        var viewport = new ScrollingStrip(display.WorkArea, display.Scale(12), MonitorPlacement.Margin(display)).Viewport;
+        var border = (int)Math.Ceiling(7 * dpi / 96d);
+        foreach (var left in new[] { viewport.Left - viewport.Width / 4, viewport.Right - viewport.Width / 4, viewport.Left })
+        {
+            var logical = new PixelRect(left, viewport.Top, viewport.Width / 2, viewport.Height);
+            var physical = MonitorPlacement.PhysicalTarget(logical, viewport, [display]);
+            var outer = new PixelRect(physical.Left - border, physical.Top,
+                physical.Width + 2 * border, physical.Height + border);
+            Assert.True(MonitorPlacement.Contains(display.WorkArea, outer));
+            Assert.Equal(logical.Width, physical.Width);
+        }
+        var fullOuter = new PixelRect(viewport.Left - border, viewport.Top,
+            viewport.Width + 2 * border, viewport.Height + border);
+        Assert.True(MonitorPlacement.Contains(display.WorkArea, fullOuter));
+    }
+
     [Fact]
     public void ParkedFrameUsesKnownBordersWhenDwmReportsOuterBounds()
     {

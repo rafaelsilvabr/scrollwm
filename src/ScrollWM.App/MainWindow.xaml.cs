@@ -506,7 +506,7 @@ public partial class MainWindow : Window
             ? "No windows to add.\nOpen or restore a window, then refresh."
             : "No eligible windows.\nOpen or restore a normal window, then refresh.";
         StripReadiness.Text = stripSession.Running
-            ? stripSession.AutomaticEnrollment ? "New eligible windows are added automatically." : "Add open windows to extend the strip."
+            ? stripSession.AutomaticEnrollment ? "New and restored eligible windows are added automatically." : "Add open windows to extend the strip."
             : StripBusy
                 ? "A strip command is finishing."
                 : blocked is not null
